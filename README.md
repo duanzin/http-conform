@@ -1,6 +1,6 @@
 # HTTP Conformance Monitor
 
-Initial foundation for the API monitoring portfolio project.
+API monitoring project.
 
 ## Current milestone status
 
