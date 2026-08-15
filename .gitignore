@@ -1,0 +1,10 @@
+# Backend
+/backend/target/
+
+# Frontend
+/frontend/node_modules/
+/frontend/.next/
+/frontend/out/
+
+# OS/editor
+.DS_Store
