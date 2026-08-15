@@ -1,4 +1,4 @@
-package com.pulsecheck.monitor.api;
+package com.httpconformance.monitor.api;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.URL;
 
-public record CreateMonitorRequest(
+public record UpdateMonitorRequest(
         @NotBlank String name,
         @NotBlank @URL String url,
         @NotBlank @Pattern(regexp = "GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS") String method,

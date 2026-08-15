@@ -1,4 +1,4 @@
-package com.pulsecheck.security;
+package com.httpconformance.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

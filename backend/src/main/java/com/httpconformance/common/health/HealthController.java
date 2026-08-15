@@ -1,4 +1,4 @@
-package com.pulsecheck.common.health;
+package com.httpconformance.common.health;
 
 import java.time.OffsetDateTime;
 import java.util.Map;

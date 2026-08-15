@@ -1,4 +1,4 @@
-package com.pulsecheck.common.api;
+package com.httpconformance.common.api;
 
 import java.time.OffsetDateTime;
 import java.util.List;

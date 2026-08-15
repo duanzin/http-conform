@@ -8,8 +8,8 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.pulsecheck</groupId>
-    <artifactId>backend</artifactId>
+    <groupId>com.httpconformance</groupId>
+    <artifactId>http-conformance-monitor-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>http-conformance-monitor-backend</name>
     <description>HTTP Conformance Monitor backend</description>

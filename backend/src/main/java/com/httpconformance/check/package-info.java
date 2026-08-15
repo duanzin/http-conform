@@ -1,2 +1,2 @@
 @org.springframework.lang.NonNullApi
-package com.pulsecheck.monitor;
+package com.httpconformance.check;

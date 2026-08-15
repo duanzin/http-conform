@@ -1,4 +1,4 @@
-package com.pulsecheck.monitor.api;
+package com.httpconformance.monitor.api;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;

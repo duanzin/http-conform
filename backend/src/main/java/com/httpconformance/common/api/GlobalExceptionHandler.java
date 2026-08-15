@@ -1,4 +1,4 @@
-package com.pulsecheck.common.api;
+package com.httpconformance.common.api;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;

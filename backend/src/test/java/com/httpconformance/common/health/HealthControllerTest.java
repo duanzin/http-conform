@@ -1,4 +1,4 @@
-package com.pulsecheck.common.health;
+package com.httpconformance.common.health;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
