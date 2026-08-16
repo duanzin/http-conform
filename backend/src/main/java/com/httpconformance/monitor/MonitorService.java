@@ -3,7 +3,6 @@ package com.httpconformance.monitor;
 import com.httpconformance.monitor.api.CreateMonitorRequest;
 import com.httpconformance.monitor.api.MonitorResponse;
 import com.httpconformance.monitor.api.UpdateMonitorRequest;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
