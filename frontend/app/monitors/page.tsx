@@ -277,32 +277,32 @@ export default function MonitorsPage() {
 
         <form onSubmit={submitCreate} className="grid gap-3 sm:grid-cols-2">
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 placeholder-slate-500"
             placeholder="Name"
             value={createForm.name}
             onChange={(event) => setCreateForm((prev) => ({ ...prev, name: event.target.value }))}
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 placeholder-slate-500"
             placeholder="URL"
             value={createForm.url}
             onChange={(event) => setCreateForm((prev) => ({ ...prev, url: event.target.value }))}
             required
           />
           <select
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700"
             value={createForm.method}
             onChange={(event) => setCreateForm((prev) => ({ ...prev, method: event.target.value }))}
           >
             {methods.map((method) => (
-              <option key={method} value={method}>
+              <option key={method} value={method} className="text-slate-700">
                 {method}
               </option>
             ))}
           </select>
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 placeholder-slate-500"
             type="number"
             min={10}
             max={86400}
@@ -311,7 +311,7 @@ export default function MonitorsPage() {
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 placeholder-slate-500"
             type="number"
             min={100}
             max={30000}
@@ -361,7 +361,7 @@ export default function MonitorsPage() {
           <p className="text-sm text-slate-600">No monitors yet.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-190 border-collapse text-sm">
               <thead>
                 <tr className="border-b border-slate-200 text-left text-slate-500">
                   <th className="px-2 py-2">Name</th>
@@ -413,32 +413,32 @@ export default function MonitorsPage() {
           <h2 className="mb-4 text-lg font-semibold text-amber-900">Edit Monitor</h2>
           <form onSubmit={submitEdit} className="grid gap-3 sm:grid-cols-2">
             <input
-              className="rounded-lg border border-amber-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-amber-300 px-3 py-2 text-sm text-amber-900 placeholder-amber-500"
               placeholder="Name"
               value={editForm.name}
               onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
               required
             />
             <input
-              className="rounded-lg border border-amber-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-amber-300 px-3 py-2 text-sm text-amber-900 placeholder-amber-500"
               placeholder="URL"
               value={editForm.url}
               onChange={(event) => setEditForm((prev) => ({ ...prev, url: event.target.value }))}
               required
             />
             <select
-              className="rounded-lg border border-amber-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-amber-300 px-3 py-2 text-sm text-amber-900"
               value={editForm.method}
               onChange={(event) => setEditForm((prev) => ({ ...prev, method: event.target.value }))}
             >
               {methods.map((method) => (
-                <option key={method} value={method}>
+                <option key={method} value={method} className="text-amber-900">
                   {method}
                 </option>
               ))}
             </select>
             <input
-              className="rounded-lg border border-amber-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-amber-300 px-3 py-2 text-sm text-amber-900 placeholder-amber-500"
               type="number"
               min={10}
               max={86400}
@@ -447,7 +447,7 @@ export default function MonitorsPage() {
               required
             />
             <input
-              className="rounded-lg border border-amber-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-amber-300 px-3 py-2 text-sm text-amber-900 placeholder-amber-500"
               type="number"
               min={100}
               max={30000}
