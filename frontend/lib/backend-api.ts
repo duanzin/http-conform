@@ -29,6 +29,10 @@ export async function fetchBackend(path: string, init?: RequestInit): Promise<Re
 }
 
 export async function toClientResponse(response: Response): Promise<Response> {
+  if (response.status === 204 || response.status === 205) {
+    return new Response(null, { status: response.status });
+  }
+
   const text = await response.text();
   const contentType = response.headers.get("content-type") ?? "application/json";
   const location = response.headers.get("location");
