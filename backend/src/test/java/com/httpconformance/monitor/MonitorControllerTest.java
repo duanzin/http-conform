@@ -96,4 +96,109 @@ class MonitorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString()).doesNotContain("GitHub API Updated"));
     }
+
+    @Test
+    void shouldReturnValidationErrorsOnCreateWithBlankName() throws Exception {
+        CreateMonitorRequest createRequest = new CreateMonitorRequest(
+                "",
+                "https://api.github.com",
+                "GET",
+                60,
+                5000,
+                true);
+
+        mockMvc.perform(post("/api/monitors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details[0]").exists());
+    }
+
+    @Test
+    void shouldReturnValidationErrorsOnCreateWithInvalidUrl() throws Exception {
+        CreateMonitorRequest createRequest = new CreateMonitorRequest(
+                "Monitor",
+                "not-a-valid-url",
+                "GET",
+                60,
+                5000,
+                true);
+
+        mockMvc.perform(post("/api/monitors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
+    }
+
+    @Test
+    void shouldReturnValidationErrorsOnCreateWithInvalidMethod() throws Exception {
+        CreateMonitorRequest createRequest = new CreateMonitorRequest(
+                "Monitor",
+                "https://api.github.com",
+                "INVALID",
+                60,
+                5000,
+                true);
+
+        mockMvc.perform(post("/api/monitors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
+    }
+
+    @Test
+    void shouldReturnValidationErrorsOnCreateWithInvalidInterval() throws Exception {
+        CreateMonitorRequest createRequest = new CreateMonitorRequest(
+                "Monitor",
+                "https://api.github.com",
+                "GET",
+                5,
+                5000,
+                true);
+
+        mockMvc.perform(post("/api/monitors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenGettingNonExistentMonitor() throws Exception {
+        UUID nonExistentId = UUID.randomUUID();
+
+        mockMvc.perform(get("/api/monitors/{id}", nonExistentId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("NOT_FOUND"));
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNonExistentMonitor() throws Exception {
+        UUID nonExistentId = UUID.randomUUID();
+        UpdateMonitorRequest updateRequest = new UpdateMonitorRequest(
+                "Updated",
+                "https://api.github.com",
+                "GET",
+                60,
+                5000,
+                true);
+
+        mockMvc.perform(put("/api/monitors/{id}", nonExistentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("NOT_FOUND"));
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenDeletingNonExistentMonitor() throws Exception {
+        UUID nonExistentId = UUID.randomUUID();
+
+        mockMvc.perform(delete("/api/monitors/{id}", nonExistentId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("NOT_FOUND"));
+    }
 }
