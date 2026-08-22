@@ -37,7 +37,12 @@ public class User {
     }
 
     public User(UUID id, String email, String name) {
+        this(id, null, email, name);
+    }
+
+    public User(UUID id, String authProviderId, String email, String name) {
         this.id = id;
+        this.authProviderId = authProviderId;
         this.email = email;
         this.name = name;
         this.createdAt = OffsetDateTime.now();
@@ -47,12 +52,28 @@ public class User {
         return id;
     }
 
+    public String getAuthProviderId() {
+        return authProviderId;
+    }
+
+    public void setAuthProviderId(String authProviderId) {
+        this.authProviderId = authProviderId;
+    }
+
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public OffsetDateTime getCreatedAt() {

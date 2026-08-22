@@ -1,7 +1,15 @@
 import { fetchBackend, toClientResponse } from "@/lib/backend-api";
 
-export async function GET() {
-  const response = await fetchBackend("/api/monitors", { method: "GET" });
+function getForwardHeaders(request: Request): Record<string, string> {
+  const auth = request.headers.get("authorization");
+  return auth ? { authorization: auth } : {};
+}
+
+export async function GET(request: Request) {
+  const response = await fetchBackend("/api/monitors", {
+    method: "GET",
+    headers: getForwardHeaders(request),
+  });
   return toClientResponse(response);
 }
 
@@ -10,8 +18,10 @@ export async function POST(request: Request) {
 
   const response = await fetchBackend("/api/monitors", {
     method: "POST",
+    headers: getForwardHeaders(request),
     body,
   });
 
   return toClientResponse(response);
 }
+

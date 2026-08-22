@@ -13,29 +13,27 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class MonitorService {
 
-    private static final UUID TEMP_USER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
-
     private final MonitorRepository monitorRepository;
 
     public MonitorService(MonitorRepository monitorRepository) {
         this.monitorRepository = monitorRepository;
     }
 
-    public List<MonitorResponse> listMonitors() {
-        return monitorRepository.findAllByUserIdOrderByCreatedAtDesc(TEMP_USER_ID).stream()
+    public List<MonitorResponse> listMonitors(UUID userId) {
+        return monitorRepository.findAllByUserIdOrderByCreatedAtDesc(userId).stream()
                 .map(this::toResponse)
                 .toList();
     }
 
-    public MonitorResponse getMonitor(UUID id) {
-        Monitor monitor = findById(id);
+    public MonitorResponse getMonitor(UUID id, UUID userId) {
+        Monitor monitor = findByIdAndUserId(id, userId);
         return toResponse(monitor);
     }
 
     @Transactional
-    public MonitorResponse createMonitor(CreateMonitorRequest request) {
+    public MonitorResponse createMonitor(CreateMonitorRequest request, UUID userId) {
         Monitor monitor = new Monitor(
-                TEMP_USER_ID,
+                userId,
                 request.name(),
                 request.url(),
                 request.method(),
@@ -48,8 +46,8 @@ public class MonitorService {
     }
 
     @Transactional
-    public MonitorResponse updateMonitor(UUID id, UpdateMonitorRequest request) {
-        Monitor monitor = findById(id);
+    public MonitorResponse updateMonitor(UUID id, UpdateMonitorRequest request, UUID userId) {
+        Monitor monitor = findByIdAndUserId(id, userId);
         monitor.setName(request.name());
         monitor.setUrl(request.url());
         monitor.setMethod(request.method());
@@ -62,13 +60,13 @@ public class MonitorService {
     }
 
     @Transactional
-    public void deleteMonitor(UUID id) {
-        Monitor monitor = findById(id);
+    public void deleteMonitor(UUID id, UUID userId) {
+        Monitor monitor = findByIdAndUserId(id, userId);
         monitorRepository.delete(monitor);
     }
 
-    private Monitor findById(UUID id) {
-        return monitorRepository.findById(id)
+    private Monitor findByIdAndUserId(UUID id, UUID userId) {
+        return monitorRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Monitor not found"));
     }
 

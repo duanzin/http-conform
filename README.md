@@ -77,24 +77,44 @@ http-conform/
 
 ## Current implementation status
 
-This repository currently contains the foundation work for the project, including:
+This repository currently contains the milestones completed through **Weekend 3**:
 
-- frontend scaffold with Next.js and TypeScript
-- backend scaffold with Spring Boot and Java 17
-- Docker Compose stack for PostgreSQL, backend, and frontend
-- health endpoint at `/api/health`
-- initial Flyway migration with `users`, `monitors`, `check_results`, and `incidents`
-- initial monitor request/response DTOs
-- global API error handling contract
-- basic security configuration with health routes public and all other routes authenticated by default
+- **Weekend 1 — Foundation**:
+  - Next.js + TypeScript frontend and Spring Boot (Java 17) backend scaffolds.
+  - Docker Compose stack for PostgreSQL, backend, and frontend.
+  - Public health endpoint at `GET /api/health`.
+  - Flyway migrations initializing `users`, `monitors`, `check_results`, and `incidents`.
+  - Global standard error responses (`VALIDATION_ERROR`, `NOT_FOUND`, etc.).
+
+- **Weekend 2 — Monitor CRUD & Dashboard UI**:
+  - Full domain model and persistence for monitors (`Monitor`, `MonitorRepository`, `MonitorService`, `MonitorController`).
+  - Validation rules on monitor name, URL, method, interval (>= 10s), and timeout (>= 100ms).
+  - Frontend dashboard at `/monitors` with responsive form controls, status messages, and live list/edit/delete actions.
+
+- **Weekend 3 — Authentication & Ownership Isolation**:
+  - OAuth2 Resource Server with JWT validation (`spring-boot-starter-oauth2-resource-server`).
+  - User synchronization and JIT provisioning via `CurrentUserService` mapping JWT subject and claims into `users`.
+  - Protected endpoints requiring valid Bearer tokens for all `/api/monitors/**` operations.
+  - Multi-tenant data scoping preventing cross-user access (User B cannot view, edit, or delete User A's monitors).
+  - Next.js API route proxy forwarding `Authorization` headers.
+  - Comprehensive automated integration tests verifying security, CRUD lifecycle, and cross-tenant boundaries.
 
 ## Backend API status
 
-### Health endpoint
+### Public endpoints
 
-- `GET /api/health`
+- `GET /api/health` — Application and database liveness check
+- `GET /actuator/health` — Spring Boot actuator health
 
-### Initial monitor DTO contracts
+### Authenticated endpoints (Requires `Authorization: Bearer <token>`)
+
+- `GET /api/monitors` — List all monitors owned by the authenticated user
+- `POST /api/monitors` — Create a new monitor associated with the authenticated user
+- `GET /api/monitors/{id}` — Get monitor details (scoped to owner)
+- `PUT /api/monitors/{id}` — Update monitor details (scoped to owner)
+- `DELETE /api/monitors/{id}` — Delete monitor (scoped to owner)
+
+### Monitor DTO contracts
 
 - `CreateMonitorRequest`
 - `UpdateMonitorRequest`
@@ -114,11 +134,11 @@ This repository currently contains the foundation work for the project, includin
 
 ## Authentication approach
 
-For the MVP and early milestones, the project is designed to use an external auth provider strategy (for example Clerk, Auth0, Supabase Auth, or another hosted identity provider). The backend should keep ownership verification and authorization checks in Spring Security and service logic.
-
-The current backend baseline enforces:
-- `/api/health` is public
-- all other API routes are authenticated by default
+The application uses an **OAuth2 Resource Server (JWT)** strategy:
+- Outbound requests pass an `Authorization: Bearer <JWT>` header.
+- In production/staging, the backend verifies tokens against the identity provider (e.g. Clerk, Auth0, Supabase Auth) via `JWT_ISSUER_URI` or `JWT_JWK_SET_URI`.
+- The user is automatically synced into the local PostgreSQL database and all monitor records are associated with the authenticated user's ID.
+- In offline/development testing, a fallback decoder allows seamless headless development and mock MVC tests.
 
 ## Local development
 
@@ -131,6 +151,7 @@ docker compose up --build
 ### 2) Access the services
 
 - Frontend: http://localhost:3000
+- Monitor Dashboard: http://localhost:3000/monitors
 - Backend API: http://localhost:8080
 - Backend health: http://localhost:8080/api/health
 - PostgreSQL: localhost:5432
@@ -204,27 +225,20 @@ The current Compose stack includes:
 - backend service
 - frontend service
 
-## Future roadmap
+## Roadmap
 
-Planned milestones for the project include:
-
-- user authentication and secure session handling
-- monitor creation, update, and deletion
-- periodic scheduled checks with background jobs
-- check result persistence and aggregation
-- uptime and latency calculation
-- incident detection and resolution flow
-- frontend dashboard pages and charts
-- deployment and CI/CD automation
-- security hardening and polish
-
-## Notes for contributors
-
-- Keep the architecture intentionally simple: one frontend, one backend, one database
-- Favor production quality over broad but shallow feature scope
-- Keep each weekend milestone independently runnable
-- Ensure every change leaves the repository in a working state
-- Prefer secure, testable patterns over shortcuts
+- [x] **Weekend 1**: Foundation & Scaffolding
+- [x] **Weekend 2**: Monitor CRUD & Frontend Dashboard
+- [x] **Weekend 3**: Authentication & Ownership Isolation
+- [ ] **Weekend 4**: Manual Health Checks (`POST /api/monitors/{id}/check` & HTTP client)
+- [ ] **Weekend 5**: Scheduled Monitoring & Background Execution
+- [ ] **Weekend 6**: Dashboard & Analytics (Uptime & Latency Charts)
+- [ ] **Weekend 7**: Incident Detection & Downtime State Machine
+- [ ] **Weekend 8**: Security & Reliability Hardening (Rate Limiting, SSRF Protection)
+- [ ] **Weekend 9**: Integration Testing & Testcontainers
+- [ ] **Weekend 10**: CI/CD Pipeline
+- [ ] **Weekend 11**: Deployment & Production Setup
+- [ ] **Weekend 12**: Public Status Pages
 
 ## Quick start summary
 
@@ -234,6 +248,6 @@ docker compose up --build
 
 Then open:
 - http://localhost:3000
+- http://localhost:3000/monitors
 - http://localhost:8080/api/health
 
-This project is currently in its foundational stage, but the repository is set up to support incremental growth toward a complete API monitoring platform.
